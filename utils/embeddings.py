@@ -1,29 +1,21 @@
 from sentence_transformers import SentenceTransformer
+import torch
 
 
 class EmbeddingModel:
 
-    def __init__(self, model_name="all-MiniLM-L6-v2"):
+    def __init__(self):
 
-        self.model = SentenceTransformer(model_name)
+        self.model = SentenceTransformer("all-MiniLM-L6-v2")
 
-    def encode_documents(self, texts):
+        self.model.eval()
 
-        embeddings = self.model.encode(
-            texts,
-            batch_size=64,
-            show_progress_bar=True,
-            convert_to_numpy=True,
-            normalize_embeddings=True
-        )
-
-        return embeddings
+        torch.set_grad_enabled(False)
 
     def encode_query(self, query):
 
         embedding = self.model.encode(
             [query],
-            convert_to_numpy=True,
             normalize_embeddings=True
         )[0]
 

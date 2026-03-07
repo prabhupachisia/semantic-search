@@ -1,9 +1,8 @@
 fastapi
 uvicorn
+numpy
 scikit-learn
 sentence-transformers
 faiss-cpu
-numpy
-pandas
-tqdm
 joblib
+pydantic
