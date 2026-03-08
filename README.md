@@ -21,6 +21,54 @@ Offline Preprocessing Pipeline
 The preprocessing stage runs once to prepare artifacts.  
 The FastAPI service loads these artifacts and serves queries.
 
+                    ┌──────────────────────────┐
+                    │  Offline Preprocessing   │
+                    └─────────────┬────────────┘
+                                  │
+                        Clean & preprocess dataset
+                                  │
+                                  ▼
+                     Generate document embeddings
+                                  │
+                                  ▼
+                        Build FAISS vector index
+                                  │
+                                  ▼
+                     Train GMM fuzzy clustering
+                                  │
+                                  ▼
+                           Save artifacts
+            (embeddings.npy, faiss.index, cluster_model.pkl)
+
+────────────────────────────────────────────────────────────
+
+                     ┌──────────────────────────┐
+                     │     FastAPI Service      │
+                     └─────────────┬────────────┘
+                                   │
+                             Incoming Query
+                                   │
+                                   ▼
+                           Embed the query
+                                   │
+                                   ▼
+                       Determine dominant cluster
+                                   │
+                                   ▼
+                         Semantic Cache Lookup
+                         │                  │
+                         │                  │
+                      Cache Hit          Cache Miss
+                         │                  │
+                         ▼                  ▼
+                    Return result       FAISS search
+                                            │
+                                            ▼
+                                   Store in cache
+                                            │
+                                            ▼
+                                       Return result
+
 ---
 
 # Dataset
