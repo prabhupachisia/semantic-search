@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer
-import torch
+import numpy as np
 
 
 class EmbeddingModel:
@@ -8,9 +8,15 @@ class EmbeddingModel:
 
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
 
-        self.model.eval()
+    def encode_documents(self, texts):
 
-        torch.set_grad_enabled(False)
+        embeddings = self.model.encode(
+            texts,
+            batch_size=64,
+            normalize_embeddings=True
+        )
+
+        return np.array(embeddings)
 
     def encode_query(self, query):
 
@@ -19,4 +25,4 @@ class EmbeddingModel:
             normalize_embeddings=True
         )[0]
 
-        return embedding
+        return np.array(embedding)

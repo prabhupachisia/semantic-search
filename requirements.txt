@@ -3,6 +3,7 @@ uvicorn
 numpy
 scikit-learn
 sentence-transformers
+torch --index-url https://download.pytorch.org/whl/cpu
 faiss-cpu
 joblib
 pydantic

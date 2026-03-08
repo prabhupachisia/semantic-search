@@ -3,9 +3,11 @@ FROM python:3.10-slim
 WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1
-ENV TRANSFORMERS_NO_ADVISORY_WARNINGS=1
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 
 COPY requirements.txt .
+
+RUN python -m pip install --upgrade pip
 
 RUN pip install --no-cache-dir -r requirements.txt
 

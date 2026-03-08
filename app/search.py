@@ -17,7 +17,7 @@ def search_documents(query_embedding):
         doc = config.documents[idx]
 
         results.append({
-            "text": doc["text"][:200],
+            "text": doc["text"],
             "score": float(score)
         })
 
@@ -26,17 +26,14 @@ def search_documents(query_embedding):
 
 def process_query(query_text):
 
-    # embed query
     query_embedding = config.embedder.encode_query(query_text)
 
-    # fuzzy cluster probabilities
     cluster_probs = config.cluster_model.predict_proba([query_embedding])[0]
 
     cluster_id = int(np.argmax(cluster_probs))
 
     cluster_probability = float(cluster_probs[cluster_id])
 
-    # semantic cache lookup
     cache_result = cache.lookup(query_embedding, cluster_id)
 
     if cache_result:
@@ -53,10 +50,8 @@ def process_query(query_text):
             "result": entry["result"]
         }
 
-    # perform vector search
     results = search_documents(query_embedding)
 
-    # add to cache
     cache.add(
         query_text,
         query_embedding,
